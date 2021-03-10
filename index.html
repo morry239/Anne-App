@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chatbot Prototype Demo!</title>
+
+    <!-- for mobile screens -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="img/favicon.png" />
+
+    <link rel="stylesheet" media="all" href="../component/styles/setup.css" />
+    <link rel="stylesheet" media="all" href="../component/styles/says.css" />
+    <link rel="stylesheet" media="all" href="../component/styles/reply.css" />
+    <link rel="stylesheet" media="all" href="../component/styles/typing.css" />
+    <link rel="stylesheet" media="all" href="../component/styles/input.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Work+Sans:400,600,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        background: #E6E6E6;
+      }
+      .bubble-container {
+        height: 100vh;
+      }
+      .bubble-container .input-wrap textarea {
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- header for the chatbot  -->
+    <div id="chat">
+      <div class="header">
+        <img src="img/image.jpg" width="40px;" />
+        <div>
+          <h1>Anne</h1>
+          <p>Learn about your bullies and speak up</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- power the chatbot -->
+    <script src="../component/js/Bubbles.js"></script>
+    <script>
+      var chatWindow = new Bubbles(
+        document.getElementById("chat"),
+        "chatWindow",
+        {
+          inputCallbackFn: function(o) {
+            // setup for the bot
+            var match = function(key) {
+              setTimeout(function() {
+                chatWindow.talk(convo, key); // restart current convo from point found in the answer
+              }, 600);
+            };
+
+            // sanitize text for search function
+            var strip = function(text) {
+              return text
+                .toLowerCase()
+                .replace(/[\s.,\/#!$%\^&\*;:{}=\-_'"`~()]/g, "");
+            };
+
+            // search function 
+            var found = false;
+            o.convo[o.standingAnswer].reply.forEach(function(e, i) {
+              strip(e.human_response).includes(strip(o.input)) &&
+              o.input.length > 0
+                ? (found = e.bot_answer)
+                : found
+                ? null
+                : (found = false);
+            });
+            found ? match(found) : miss();
+          }
+        }
+      ); // bot setup completed.
+
+      // adjust conversations here
+      var convo = {
+        // first section
+        intro: {
+          bot_says: [
+            "Hi this is Anne, a chatbot for understanding and fighting for bullying.",
+            "Please keep clicking the black bubbles to answer me.",
+            "How do you feel today?",
+            "<img src=https://media.giphy.com/media/l0MYtjhrNDLnlKf28/giphy.gif />"
+          ],
+          
+          human_reply: [
+            {
+              human_response:
+                "Stressed",
+              bot_answer: "Easy"
+            },
+            {
+              human_response:
+                "Ok",
+              bot_answer: "doubt"
+            },
+            {
+              human_response:
+                "Happy",
+              bot_answer: "window"
+            }
+          ]
+        },
+
+        //second section 
+        
+        Easy: {
+          bot_says: [
+             "I'm sorry to hear that! What happened?",
+            "<img src=https://media.giphy.com/media/3o6Zt3f8KApQpb6GmA/giphy.gif />"
+          ],
+          human_reply: [
+            {
+              human_response: "I was bullied",
+              bot_answer: "bullying"
+            },
+            {
+              human_response: "I am overwhelmed with my work",
+              bot_answer: "office"
+            },
+            {
+              human_response: "I feel like I want to hurt myself",
+              bot_answer: "selfharm"
+            }
+          ]
+        },
+        
+        //third section
+        
+        doubt: {
+          bot_says: [
+          "Good. Is there anything I can help you today?"
+          ],
+          human_reply: [
+            {
+              human_response: "No thanks",
+              bot_answer: "almostend2b1"
+            },
+            {
+              human_response: "To be honest, I don't feel good.",
+              bot_answer: "tbh"
+            }
+          ]
+        },
+        
+        //fourth section
+        
+        tbh: {
+          bot_says: [
+            "Why not?"
+          ],
+          human_reply: [
+            {
+              human_response: "Someone bullied me",
+              bot_answer: "bullied"
+            },
+            {
+              human_response: "My colleague is very rude",
+              bot_answer: "colleague"
+            },
+            {
+              human_response: "I want to harm myself.",
+              bot_answer: "harmthought"
+            }
+          ]
+        },
+        
+        //fifth section
+        
+        window: {
+          bot_says: [
+            "Glad that you're happy now.",
+            "If you need any help about bullying, feel free to chat with me anytime again!",
+            "Thank you for chatting with me today and have a good day."
+          ],
+          human_reply: [
+            {
+              human_response: "Bye for now.",
+              bot_answer: "end2C"
+            }
+          ]
+        },
+        
+        //sixth section
+        
+        almostend2b1: {
+          bot_says: [
+            "I understand.",
+            "If you want to talk to me again, just open the app.",
+            "Thank you for talking to me today and see you."
+          ],
+          human_reply: [
+            {
+              human_response: "Bye",
+              bot_answer: "endsixth"
+            }
+          ]
+        },
+      
+        //seventh section
+
+        bullying: {
+          bot_says: [
+            "I'm sorry that you're going through this.",
+            "In order to help you find a solution for your bullying, I need to ask you a few questions.",
+            "How long have you been bullied?"
+          ], 
+          human_reply: [
+            {
+              human_response: "since last week",
+              bot_answer: "shortterm"
+            },
+            {
+              human_response: "since last month",
+              bot_answer: "midterm"
+            },
+             {
+              human_response: "since last year",
+              bot_answer: "longterm"
+            }
+          ]
+        },
+        
+        //eighth section
+        
+        office: {
+          bot_says: [
+            "Gosh - you need a break.",
+            "I can see that you are very stressed.",
+            "What exactly overwhelms you at work?"
+          ],
+          human_reply: [
+            {
+              human_response: "I have too much work to do. I can't make the deadline.",
+              bot_answer: "deadline"
+            },
+            {
+              human_response: "My colleagues overwhelm me. I don't like to working with them.",
+              bot_answer: "energydrainers"
+            },
+            {
+              human_response: "My classmates overwhelm me. Once I finish this school, I don't want to meet them ever again.",
+              bot_answer: "badmates"
+            }
+          ]
+        },
+        
+        //fourth section
+        
+        longterm: {
+          bot_says: [
+          "You've already been going through this for a long term.",
+          "I recommend you to get outside help.",
+          "To whom would you like to contact?"
+          ],
+          human_reply: [
+            {
+              human_response: "therapist",
+              bot_answer: "therapist"
+            },
+            {
+              human_response: "police",
+              bot_answer: "police"
+            },
+            {
+              human_response: "work",
+              bot_answer: "work"
+            },
+            {
+              human_response: "school",
+              bot_answer: "school"
+            }
+          ]
+        },
+
+        //fifth section
+        
+        therapist: {
+          bot_says: [
+            "I'm putting you through your therapist, Mrs Moeller."
+          ],
+          human_reply: [
+            {
+              human_response: "ok",
+              bot_answer: "exit1"
+            }
+          ]
+        },
+      };
+      //make sure you always keep this as this closes line 76!!!!!!
+
+      chatWindow.talk(convo);
+    </script>
+  </body>
+</html>
